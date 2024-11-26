@@ -14,34 +14,34 @@ int main(){
   printf("\e[36m%d\e[0m about to create 2 child processes\n", getpid());
 
   pid_t p1 = fork();
-  if(p1 == -1){perror("fork not working you idiot"); exit(1);}
+  if(p1 == -1){perror("fork not working you idiot\n"); exit(1);}
 
   wait(NULL);
 
   pid_t p2 = -1; int r1 = 0;
   if(p1 != 0){
     p2 = fork();
-    if(p2 == -1){perror("fork not working you idiot"); exit(1);}
+    if(p2 == -1){perror("fork not working you idiot\n"); exit(1);}
     r1 = randomNumber();
+    printf("%d %dsec\n", getpid(), r1);
   }
 
-  pid_t p3 = -1; int r2 = 0;
+  /*pid_t p3 = -1; int r2 = 0;
   if(p1 != 0 && p2 != 0){
     p3 = fork();
     if(p3 == -1){perror("fork not working you dummy"); exit(1);}
     r2 = randomNumber();
-  }
-
-  printf("amazing %d, %d\n", r1, r2);
+    printf("%d %dsec\n", getpid(), r2);
+  }*/
 
   if(p2 == 0){
     sleep(r1);
     printf("\e[36m%d\e[0m finished after %dsec\n", getpid(), r1);
   }
-  if(p3 == 0){
+  /*if(p3 == 0){
     sleep(r2);
     printf("\e[36m%d\e[0m finished after %dsec\n", getpid(), r2);
-  }
+  }*/
 
   //int rand = randomNumber();
   return 0;
