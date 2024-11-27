@@ -13,37 +13,33 @@ int randomNumber();
 int main(){
   printf("\e[36m%d\e[0m about to create 2 child processes\n", getpid());
 
+  pid_t parentId = getpid();
+
   pid_t p1 = fork();
   if(p1 == -1){perror("fork not working you idiot\n"); exit(1);}
-
-  wait(NULL);
-
-  pid_t p2 = -1; int r1 = 0;
-  if(p1 != 0){
-    p2 = fork();
-    if(p2 == -1){perror("fork not working you idiot\n"); exit(1);}
-    r1 = randomNumber();
-    printf("%d %dsec\n", getpid(), r1);
-  }
-
-  /*pid_t p3 = -1; int r2 = 0;
-  if(p1 != 0 && p2 != 0){
-    p3 = fork();
-    if(p3 == -1){perror("fork not working you dummy"); exit(1);}
-    r2 = randomNumber();
-    printf("%d %dsec\n", getpid(), r2);
-  }*/
-
-  if(p2 == 0){
+  if(p1 == 0){
+    int r1 = randomNumber();
+    printf("\e[36m%d\e[0m %dsec\n", getpid(), r1);
     sleep(r1);
     printf("\e[36m%d\e[0m finished after %dsec\n", getpid(), r1);
+    exit(r1);
   }
-  /*if(p3 == 0){
+
+  pid_t p2 = fork();
+  if(p2 == -1){perror("fork not working you dummy\n"); exit(1);}
+  if(p2 == 0){
+    int r2 = randomNumber();
+    printf("\e[36m%d\e[0m %dsec\n", getpid(), r2);
     sleep(r2);
     printf("\e[36m%d\e[0m finished after %dsec\n", getpid(), r2);
-  }*/
+    exit(r2);
+  }
 
-  //int rand = randomNumber();
+  int status;
+  pid_t exitStatus = wait(&status);
+  if(WIFEXITED(status)){
+    printf("Main process \e[36m%d\e[0m is done. Child \e[36m%d\e[0m slept for %dsec\n", parentId, exitStatus, WEXITSTATUS(status) );
+  }
   return 0;
 }
 
